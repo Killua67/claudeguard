@@ -54,7 +54,7 @@ netstat -anv -p tcp -f inet |
 
 系统代理旁路是交给操作系统的例外列表，Clash 规则页则决定流量到达代理之后如何转发。先去 Clash Verge **设置 → 系统代理旁的齿轮 → 代理绕过设置** 检查，别先改订阅规则。Mac 上也可以看 `scutil --proxy` 的 `ExceptionsList`。如果列表里出现一个你没单独配过的域名，单凭这一条无法判断它来自默认配置、旧设置还是别的工具。
 
-两端都接受明确的本机例外和代码允许的几项本地范围，例如 `localhost`、`127.0.0.1` 和 `192.168.0.0/16`。Windows 的 `127.*`、`192.168.*` 属于文本通配，当前版本会拒绝。Mac 还会检查系统是否单独启用了「排除简单主机名」。修改自己管理的设置后，回到总览重跑完整检查。 [WinINet 旁路规则说明](https://learn.microsoft.com/en-us/windows/win32/wininet/enabling-internet-functionality#listing-the-proxy-bypass)
+两端都接受明确的本机例外和代码允许的几项本地范围，例如 `localhost`、`127.0.0.1` 和 `192.168.0.0/16`。Windows 另外固定接受 `10.*`、`192.168.5.*` 和 `*.dazhidayong.cn`；`127.*`、`192.168.*` 等其他文本通配，当前版本仍会拒绝。Mac 还会检查系统是否单独启用了「排除简单主机名」。修改自己管理的设置后，回到总览重跑完整检查。 [WinINet 旁路规则说明](https://learn.microsoft.com/en-us/windows/win32/wininet/enabling-internet-functionality#listing-the-proxy-bypass)
 
 ## 两端都适用的排查顺序
 

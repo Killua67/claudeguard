@@ -64,7 +64,8 @@ mod rules {
     }
 
     /// Fixed allowlist. In WinINet a wildcard such as "127.*" is a host pattern,
-    /// not an address range. Never accept arbitrary domain or textual IP globs.
+    /// not an address range. Never accept arbitrary domain or textual IP globs;
+    /// the few fixed globs below cannot match any Claude service hostname.
     pub(super) fn safe_bypass(bypass: &str) -> bool {
         bypass.trim().is_empty()
             || bypass.split(';').all(|part| {
@@ -79,6 +80,9 @@ mod rules {
                         | "10.0.0.0/8"
                         | "172.16.0.0/12"
                         | "192.168.0.0/16"
+                        | "10.*"
+                        | "192.168.5.*"
+                        | "*.dazhidayong.cn"
                 )
             })
     }
@@ -127,14 +131,19 @@ mod rules {
         }
 
         #[test]
-        fn local_bypass_list_does_not_accept_domain_patterns_or_unknown_syntax() {
+        fn local_bypass_list_accepts_only_fixed_entries() {
             assert!(safe_bypass(""));
             assert!(safe_bypass(
                 "LOCALHOST;127.0.0.1;[::1];<local>;*.local;10.0.0.0/8;192.168.0.0/16"
             ));
+            assert!(safe_bypass("10.*;192.168.5.*;*.DAZHIDAYONG.cn"));
             for s in [
                 "127.*",
                 "192.168.*",
+                "192.168.6.*",
+                "10.0.*",
+                "*.cn",
+                "dazhidayong.cn",
                 "localhost;*.example.invalid",
                 "localhost,*",
                 "localhost;;127.0.0.1",
