@@ -19,6 +19,8 @@
 
 真实 Claude CLI / Desktop 启动流程未由开发测试执行；启动适配器使用无害替身验证，不将模拟验收宣传为真实客户端全面兼容。
 
+Windows 下载安装、首次检测和 macOS 常见问题见 [桌面使用与排查](docs/DESKTOP-GUIDE.md)。
+
 ## 使用流程
 
 1. 打开代理软件，启用系统 HTTP / HTTPS 代理。

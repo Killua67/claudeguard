@@ -103,6 +103,7 @@
   "crates/guard-service/tests/ipv6_runtime.rs",
   "docs/ALERT_ACCEPTANCE.md",
   "docs/ARCHITECTURE.md",
+  "docs/DESKTOP-GUIDE.md",
   "docs/IPV6.md",
   "docs/NOTIFICATION_DIAGNOSTICS.md",
   "docs/ONBOARDING.md",
