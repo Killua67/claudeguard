@@ -29,7 +29,7 @@ impl Drop for Process {
 
 #[derive(Debug, PartialEq, Eq)]
 pub(super) struct Owner {
-    pid: u32,
+    pub(super) pid: u32,
     pub(super) path: String,
     pub(super) created: u64,
 }
@@ -242,8 +242,7 @@ mod tests {
     #[test]
     fn kernel_and_handle_observations_agree_for_the_test_process() {
         let pid = std::process::id();
-        assert_eq!(kernel_process_owner(pid), process_owner(pid));
-        assert!(kernel_process_owner(pid).is_ok());
+        assert_eq!(kernel_process_owner(pid).unwrap(), process_owner(pid).unwrap());
     }
 
     #[test]
@@ -257,11 +256,11 @@ mod tests {
                 Ok(r"C:\Test\proxy.exe".into())
             },
         );
-        assert_eq!(result, Err(Fault::Drift));
-        assert_eq!(
+        assert!(matches!(result, Err(Fault::Drift)));
+        assert!(matches!(
             read_kernel_owner(17, || Ok(40), || Err(Fault::ProcessIdentity)),
             Err(Fault::ProcessIdentity)
-        );
+        ));
     }
 
     #[test]
