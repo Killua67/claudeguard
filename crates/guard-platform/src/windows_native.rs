@@ -1,10 +1,13 @@
+#[path = "windows_process.rs"]
+mod process;
+
 use super::rules::{listener_pid, manual_port, safe_bypass};
 use crate::*;
 use guard_core::{
-    config::windows_proxy_path,
     discovery::{Discovery, ProxyCandidate},
     policy,
 };
+use process::{process_owner, Owner};
 use std::{
     collections::BTreeMap,
     ffi::c_void,
@@ -13,9 +16,7 @@ use std::{
     ptr::null,
 };
 use windows_sys::Win32::{
-    Foundation::{
-        CloseHandle, GlobalFree, ERROR_BUFFER_OVERFLOW, ERROR_INSUFFICIENT_BUFFER, FILETIME, HANDLE,
-    },
+    Foundation::{GlobalFree, ERROR_BUFFER_OVERFLOW, ERROR_INSUFFICIENT_BUFFER},
     NetworkManagement::{
         IpHelper::{
             GetAdaptersAddresses, GetExtendedTcpTable, GetIpForwardTable, GAA_FLAG_SKIP_ANYCAST,
@@ -31,14 +32,8 @@ use windows_sys::Win32::{
         WinHttp::{WinHttpGetIEProxyConfigForCurrentUser, WINHTTP_CURRENT_USER_IE_PROXY_CONFIG},
         WinSock::{AF_INET, AF_INET6, AF_UNSPEC},
     },
-    System::{
-        Threading::{
-            GetProcessTimes, OpenProcess, QueryFullProcessImageNameW,
-            PROCESS_QUERY_LIMITED_INFORMATION,
-        },
-        Time::{
-            GetDynamicTimeZoneInformation, DYNAMIC_TIME_ZONE_INFORMATION, TIME_ZONE_ID_INVALID,
-        },
+    System::Time::{
+        GetDynamicTimeZoneInformation, DYNAMIC_TIME_ZONE_INFORMATION, TIME_ZONE_ID_INVALID,
     },
 };
 
@@ -149,6 +144,11 @@ impl Buffer {
         Err(fault)
     }
 
+    fn bytes(&self) -> &[u8] {
+        // The allocation is initialized and read() bounds size to the allocation.
+        unsafe { std::slice::from_raw_parts(self.words.as_ptr().cast(), self.size) }
+    }
+
     /// The caller must supply the actual native row type; all bit patterns
     /// returned for that type must be valid Rust values.
     unsafe fn rows<T>(&self, offset: usize) -> Option<&[T]> {
@@ -222,53 +222,6 @@ fn listener(port: u16) -> Result<u32, Fault> {
         return Err(Fault::Listener);
     }
     Ok(pid)
-}
-
-struct Process(HANDLE);
-impl Drop for Process {
-    fn drop(&mut self) {
-        unsafe { CloseHandle(self.0) };
-    }
-}
-
-#[derive(Debug, PartialEq, Eq)]
-struct Owner {
-    pid: u32,
-    path: String,
-    created: u64,
-}
-
-fn process_owner(pid: u32) -> Result<Owner, Fault> {
-    let handle = unsafe { OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, 0, pid) };
-    if handle.is_null() {
-        return Err(Fault::ProcessIdentity);
-    }
-    let process = Process(handle);
-    let mut path = [0_u16; 4097];
-    let mut len = path.len() as u32;
-    let (mut created, mut exit, mut kernel, mut user) = (
-        FILETIME::default(),
-        FILETIME::default(),
-        FILETIME::default(),
-        FILETIME::default(),
-    );
-    // The handle stays valid while both the path and creation time are read.
-    if unsafe { QueryFullProcessImageNameW(process.0, 0, path.as_mut_ptr(), &mut len) } == 0
-        || unsafe { GetProcessTimes(process.0, &mut created, &mut exit, &mut kernel, &mut user) }
-            == 0
-    {
-        return Err(Fault::ProcessIdentity);
-    }
-    let path = String::from_utf16(path.get(..len as usize).ok_or(Fault::ProcessIdentity)?)
-        .map_err(|_| Fault::ProcessIdentity)?;
-    if !windows_proxy_path(&path) {
-        return Err(Fault::ProcessIdentity);
-    }
-    Ok(Owner {
-        pid,
-        path,
-        created: (u64::from(created.dwHighDateTime) << 32) | u64::from(created.dwLowDateTime),
-    })
 }
 
 fn observed_owner(port: u16) -> Result<Owner, Fault> {

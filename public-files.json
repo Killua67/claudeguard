@@ -90,6 +90,7 @@
   "crates/guard-platform/src/windows.rs",
   "crates/guard-platform/src/windows_native.rs",
   "crates/guard-platform/src/windows_probe.rs",
+  "crates/guard-platform/src/windows_process.rs",
   "crates/guard-platform/tests/macos_contract.rs",
   "crates/guard-platform/tests/proxy_transport_contract.rs",
   "crates/guard-service/Cargo.toml",
