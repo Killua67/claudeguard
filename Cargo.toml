@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+members = ["crates/guard-core", "crates/guard-platform", "crates/guard-service", "apps/desktop/src-tauri"]
+default-members = ["crates/guard-core", "crates/guard-platform", "crates/guard-service"]
+
+[workspace.package]
+version = "0.6.0-alpha.6"
+edition = "2021"
+rust-version = "1.99"
+publish = false
+license = "Apache-2.0"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+url = "2"

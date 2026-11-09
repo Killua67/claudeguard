@@ -1,0 +1,5 @@
+# Keep source bytes consistent across platforms and checksum exports.
+* text=auto eol=lf
+*.png -text
+*.icns -text
+*.ico -text

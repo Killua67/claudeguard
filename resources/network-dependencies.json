@@ -1,0 +1,400 @@
+{
+  "version": "2026-10-27.1",
+  "limitations": "沿用旧版审核快照；不保证覆盖自定义 MCP、SSO、网关或未来新增地址。清单只离线展示，不做 HTTP、TLS 或 DNS 探测。",
+  "entries": [
+    {
+      "host": "api.anthropic.com",
+      "purpose": "模型服务入口",
+      "scope": "core",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "claude.ai",
+      "purpose": "账号登录入口",
+      "scope": "core",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "claude.com",
+      "purpose": "登录跳转与网页入口",
+      "scope": "core",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "platform.claude.com",
+      "purpose": "认证及令牌服务入口",
+      "scope": "core",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "anthropic.com",
+      "purpose": "Desktop 静态内容",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "a-api.anthropic.com",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "a-cdn.anthropic.com",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "s-cdn.anthropic.com",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "assets-proxy.anthropic.com",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "a.claude.ai",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "assets.claude.ai",
+      "purpose": "Desktop 内容与资源",
+      "scope": "core",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "downloads.claude.ai",
+      "purpose": "安装、更新及插件下载",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "sso.claude.com",
+      "purpose": "组织单点登录",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "mcp-proxy.anthropic.com",
+      "purpose": "官方连接器",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "bridge.claudeusercontent.com",
+      "purpose": "浏览器扩展桥接",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "code.claude.com",
+      "purpose": "工具文档查询",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "storage.googleapis.com",
+      "purpose": "插件资源及旧版分发",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "registry.npmjs.org",
+      "purpose": "npm / 插件依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "github.com",
+      "purpose": "插件仓库",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "raw.githubusercontent.com",
+      "purpose": "发布说明与资源",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "http-intake.logs.us5.datadoghq.com",
+      "purpose": "可选遥测",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "browser-intake-us5-datadoghq.com",
+      "purpose": "可选错误报告",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "formulae.brew.sh",
+      "purpose": "Homebrew 安装更新",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "fonts.googleapis.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "fonts.gstatic.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "cdnjs.cloudflare.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "cdn.jsdelivr.net",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "cdn.tailwindcss.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "code.jquery.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "unpkg.com",
+      "purpose": "Artifact 可选字体或前端依赖",
+      "scope": "feature",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "claude.app",
+      "purpose": "Desktop 宽泛清单入口（非最小主机清单）",
+      "scope": "feature",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.frame.claudeusercontent.com",
+      "purpose": "动态 Artifact 内容",
+      "scope": "dynamic",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "*-review.googlesource.com",
+      "purpose": "特定代码仓库的 Gerrit 查询",
+      "scope": "dynamic",
+      "profiles": [
+        "cli",
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/network-config#network-access-requirements"
+    },
+    {
+      "host": "*.livepreview.claude.ai",
+      "purpose": "动态预览、内容或组件",
+      "scope": "dynamic",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.livepreview.claude.app",
+      "purpose": "动态预览、内容或组件",
+      "scope": "dynamic",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.claudeusercontent.com",
+      "purpose": "动态预览、内容或组件",
+      "scope": "dynamic",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.claudemcpcontent.com",
+      "purpose": "动态预览、内容或组件",
+      "scope": "dynamic",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.anthropic.com",
+      "purpose": "官方宽泛允许规则备选；不代替最小主机清单",
+      "scope": "broadAlternative",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.claude.ai",
+      "purpose": "官方宽泛允许规则备选；不代替最小主机清单",
+      "scope": "broadAlternative",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.claude.com",
+      "purpose": "官方宽泛允许规则备选；不代替最小主机清单",
+      "scope": "broadAlternative",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    },
+    {
+      "host": "*.claude.app",
+      "purpose": "官方宽泛允许规则备选；不代替最小主机清单",
+      "scope": "broadAlternative",
+      "profiles": [
+        "desktop"
+      ],
+      "source": "https://code.claude.com/docs/en/desktop#network-access-requirements"
+    }
+  ]
+}

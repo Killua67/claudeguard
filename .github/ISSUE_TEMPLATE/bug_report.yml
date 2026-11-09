@@ -1,0 +1,26 @@
+name: 缺陷反馈
+description: 请提供脱敏信息；不要附账号、令牌、完整 IP、个人路径或真实客户端网络材料。
+title: '[Bug] '
+body:
+  - type: input
+    id: version
+    attributes:
+      label: ClaudeGuard 版本和系统架构
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: 运行模式
+      options:
+        - 普通模式
+        - observe-only
+        - demo / demo-first-run
+        - CLI 仅检查
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 复现步骤、预期和实际结果
+      description: 请用脱敏报告或模拟数据，不要通过执行真实 Claude 或请求 Anthropic 复现。
+    validations:
+      required: true

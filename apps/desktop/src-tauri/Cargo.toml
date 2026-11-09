@@ -1,0 +1,29 @@
+[package]
+name = "guard-desktop"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+license.workspace = true
+[lib]
+name = "guard_desktop"
+crate-type = ["lib", "cdylib", "staticlib"]
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+[dependencies]
+tauri = { version = "2", features = ["tray-icon", "image-png"] }
+tauri-plugin-dialog = "2"
+guard-core = { path = "../../../crates/guard-core" }
+guard-platform = { path = "../../../crates/guard-platform" }
+guard-service = { path = "../../../crates/guard-service" }
+serde.workspace = true
+serde_json.workspace = true
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+block2 = "0.6"
+objc2-foundation = {version="0.3",default-features=false,features= ["NSString", "NSArray", "NSError", "NSObject"] }
+objc2-user-notifications = {version="0.3",default-features=false,features= ["std", "UNUserNotificationCenter", "UNNotificationSettings", "UNNotification", "UNNotificationContent", "UNNotificationRequest", "UNNotificationResponse", "UNNotificationSound", "UNNotificationTrigger", "block2", "bitflags"] }

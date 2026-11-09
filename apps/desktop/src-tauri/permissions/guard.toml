@@ -1,0 +1,4 @@
+[[permission]]
+identifier = "guard-operations"
+description = "Typed local guard operations, with launch authorization and profile validation enforced in Rust."
+commands.allow = ["snapshot", "scan", "discover_proxy", "configure", "launch", "enable_notifications", "notification_status", "refresh_notifications", "test_notification", "confirm_test_notification", "hide_main"]

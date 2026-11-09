@@ -1,0 +1,20 @@
+.build/
+.swiftpm/
+.tooling/
+target/
+node_modules/
+dist/
+apps/desktop/src-tauri/gen/
+.DS_Store
+*.tsbuildinfo
+
+output/
+.playwright-cli/
+
+# Private local history / experiments; never export the whole workspace.
+/HANDOFF.md
+/Design/
+/Experiments/
+/Sources/
+/Tests/
+/Package.swift
