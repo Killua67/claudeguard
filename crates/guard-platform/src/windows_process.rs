@@ -242,7 +242,8 @@ mod tests {
     #[test]
     fn kernel_and_handle_observations_agree_for_the_test_process() {
         let pid = std::process::id();
-        assert_eq!(kernel_process_owner(pid).unwrap(), process_owner(pid).unwrap());
+        let kernel = kernel_process_owner(pid).unwrap();
+        assert_eq!(kernel, process_owner(pid).unwrap());
     }
 
     #[test]
@@ -257,10 +258,8 @@ mod tests {
             },
         );
         assert!(matches!(result, Err(Fault::Drift)));
-        assert!(matches!(
-            read_kernel_owner(17, || Ok(40), || Err(Fault::ProcessIdentity)),
-            Err(Fault::ProcessIdentity)
-        ));
+        let unavailable = read_kernel_owner(17, || Ok(40), || Err(Fault::ProcessIdentity));
+        assert!(matches!(unavailable, Err(Fault::ProcessIdentity)));
     }
 
     #[test]
