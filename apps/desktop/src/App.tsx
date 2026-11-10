@@ -187,9 +187,12 @@ export function App() {
                 : !state.launchAllowed
                   ? '本次仅检测 · 后端禁止启动客户端'
                   : !state.clients.cli
-                    ? 'CLI 未安装 · 不会自动安装'
+                    ? '未找到受支持的 CLI · 不会自动安装'
                     : '仅手动点击启动 · 点击后再次复检'}
             </small>
+            {!state.demo && state.platform.startsWith('windows') && (
+              <small>Windows 启动仅支持官方原生 CLI 和 Desktop；npm 包装脚本及 WSL 不支持。</small>
+            )}
           </div>
         </div>
         <div className="summary-line">

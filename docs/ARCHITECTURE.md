@@ -3,7 +3,7 @@
 依赖从 React 界面经类型化 Tauri IPC 到 guard-service；guard-core 只包含类型、纯规则、启动意图和监测状态机，guard-platform 承载系统副作用。
 
 - `guard-core`：稳定 RuleId、Profile、策略版本、Report、单次启动意图与时效、通知证据、恢复状态和处理指引。显示文案不控制授权；`Check::blocks_launch` 统一决定预检阻断影响，`CheckView` 仅序列化这个计算结果，输入的同名字段不能覆盖后端判断。CLI/Desktop 及模拟客户端复用 `proxy::ClientProxy` 纯配置。
-- `guard-platform`：Mac 受限命令和原生检查、静态验签、网络与生命周期事件、启动适配。Windows 用系统 API 只读检查当前用户代理、监听进程、IPv4 默认路由、DNS 配置和时区，复用共享预检及轮询；启动始终禁用。
+- `guard-platform`：Mac 受限命令和原生检查、静态验签、网络与生命周期事件、启动适配。Windows 用系统 API 只读检查当前用户代理、监听进程、IPv4 默认路由、DNS 配置和时区，复用共享预检及轮询；正常模式接入离线 Authenticode 与原生手动启动，演示和仅观察模式保持后端执行禁令。
 - `guard-service`：完整检查顺序、配置冻结、Controller、锁和代际、独立时效维护、进度快照、共享告警 sink。
 - `desktop`：持久化设置、人工确认、同用户单实例、通知/托盘/窗口、UI。前端不持有启动票据，导入报告不能授权。
 
@@ -13,7 +13,9 @@
 
 只有明确手动操作才能建立一次性启动意图。完整报告与实际出口采样均须新鲜，最后提交时再次检查代际、时限、进程与应用身份；后台恢复、报告或 UI 不能生成意图。
 
-检查器只接受固定系统可执行白名单，无通用 shell、URL、下载器或规则执行接口。配置中的代理程序路径只用于身份比对，不作为检测命令运行。客户端静态签名校验保留官方 team ID 与 Desktop bundle ID；这些是身份约束，不是个人偏好。
+检查器只接受固定系统可执行白名单，无通用 shell、URL、下载器或规则执行接口。配置中的代理程序路径只用于身份比对，不作为检测命令运行。macOS 静态签名校验保留官方 team ID 与 Desktop bundle ID；Windows 校验有效 Authenticode 签名及发布者 CN/O，并保持可执行文件的写入/删除拒绝共享锁。MSIX 还校验执行别名、包族及目标路径，通过别名启动以保留包身份。这些是身份约束，不是个人偏好。
+
+Windows CLI 的内部子进程入口只接受管道中的冻结配置，固定操作系统父进程句柄并核对同路径与创建时间；不接收任意客户端路径。子进程完整复检后发送 READY，父进程再次验证启动票据才发送带系统运行时间截止值的 GO；子进程提交前再验证本地基线、证据时效、父进程存活和共享五秒截止值。失败或超时只回收本次辅助进程。新控制台由 CreateProcess 创建，不使用 shell 脚本。
 
 ## 监测
 
@@ -23,7 +25,7 @@
 
 核心、服务和平台使用注入 Clock、Platform、CommandRunner、ApplicationRegistry 与 NotificationSink。默认离线/回环，无账号和真实客户端。界面使用 jsdom/Testing Library；原生 GUI 验收只能使用 demo 或用户授权的 observe-only。
 
-Windows 固定 Cloudflare 探测使用内置根证书的 Rustls，应用只连接已确认的 IPv4 回环 HTTP 代理，不在本地解析目标域名、不跟随重定向。Windows 实机验收、Authenticode、原生通知、路径事件、启动适配和 WSL 尚未完成；客户端签名和实例在观察报告中标明未验证。
+Windows 固定 Cloudflare 探测使用内置根证书的 Rustls，应用只连接已确认的 IPv4 回环 HTTP 代理，不在本地解析目标域名、不跟随重定向。Windows 离线 Authenticode、已有进程观察及原生启动适配已接入代码，启动实机验收仍未完成；原生通知、路径事件和 WSL 尚未支持。离线校验不查询网络证书撤销；进程观察不代表已有客户端流量已验证。
 
 ## 代理预检范围
 

@@ -1,5 +1,13 @@
+#[path = "windows_client.rs"]
+mod client;
+#[path = "windows_launch.rs"]
+mod launch;
 #[path = "windows_process.rs"]
 mod process;
+#[path = "windows_trust.rs"]
+mod trust;
+pub use client::{guard_parent, GuardParent};
+pub use launch::{cli_session, submission_tick};
 
 use super::rules::{listener_pid, manual_port, safe_bypass};
 use crate::*;
@@ -343,6 +351,7 @@ fn environment() -> Check {
         "SSL_CERT_FILE",
         "SSL_CERT_DIR",
         "NODE_TLS_REJECT_UNAUTHORIZED",
+        "ELECTRON_RUN_AS_NODE",
     ]
     .into_iter()
     .filter_map(|key| {
@@ -388,7 +397,7 @@ impl Platform for WindowsPlatform {
     }
 
     fn clients(&self) -> ClientAvailability {
-        ClientAvailability::default()
+        client::availability()
     }
 
     fn inspect(&self, id: RuleId, profile: &Profile, _: &dyn Clock) -> Check {
@@ -422,10 +431,8 @@ impl Platform for WindowsPlatform {
             R::Ipv6 => (S::Warning, "Windows IPv4/IPv6 客户端实际流量覆盖未验证"),
             R::Timezone => return timezone(profile),
             R::Environment => return environment(),
-            R::ClientSignature | R::ExistingClients => (
-                S::Info,
-                "Windows 仅观察模式；未验证客户端签名或旧进程，也不会启动客户端",
-            ),
+            R::ClientSignature => return client::signatures(),
+            R::ExistingClients => return client::existing(),
             _ => (S::Skipped, "由共享检测引擎顺序执行"),
         };
         Check::new(id, result, message)
@@ -453,6 +460,17 @@ impl Platform for WindowsPlatform {
             return Err(Fault::Drift);
         }
         Ok(sample)
+    }
+
+    fn launch(
+        &self,
+        target: ClientTarget,
+        profile: &Profile,
+        checker: &std::path::Path,
+        directory: Option<&std::path::Path>,
+        authorize: &dyn Fn() -> bool,
+    ) -> Result<(), Fault> {
+        launch::launch(target, profile, checker, directory, authorize)
     }
 }
 

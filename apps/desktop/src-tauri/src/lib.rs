@@ -7,6 +7,8 @@ mod mode;
 mod notifications;
 mod runtime;
 mod settings;
+#[cfg(windows)]
+mod windows_session;
 use guard_platform::{demo::DemoPlatform, Platform, SystemClock};
 use guard_service::controller::Controller;
 use std::{
@@ -103,6 +105,10 @@ pub fn run() {
             std::process::exit(2)
         }
     };
+    #[cfg(windows)]
+    if matches!(mode, mode::Mode::WindowsCliSession) {
+        std::process::exit(windows_session::run());
+    }
     if let Some(code) = diagnostics::run(&mode) {
         std::process::exit(code);
     }
@@ -121,8 +127,7 @@ pub fn run() {
             }
         }
     };
-    let launch_allowed =
-        cfg!(target_os = "macos") && !demo && !matches!(mode, mode::Mode::ObserveOnly);
+    let launch_allowed = mode::launch_allowed(&mode);
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .invoke_handler(tauri::generate_handler![

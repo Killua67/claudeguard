@@ -2,17 +2,24 @@
 use guard_core::config::LaunchProfile;
 pub enum Mode {
     Live,
+    #[cfg(windows)]
+    WindowsCliSession,
     Demo,
     DemoFirstRun,
     ObserveOnly,
     Catalog,
     MonitorCheck,
-    Diagnostics { json: bool, launch_check: bool },
+    Diagnostics {
+        json: bool,
+        launch_check: bool,
+    },
     CheckOnly(LaunchProfile),
 }
 pub fn parse(args: &[String]) -> Result<Mode, &'static str> {
     match args {
         [] => return Ok(Mode::Live),
+        #[cfg(windows)]
+        [a] if a == "--windows-cli-session" => return Ok(Mode::WindowsCliSession),
         [a] if a == "--demo" => return Ok(Mode::Demo),
         [a] if a == "--demo-first-run" => return Ok(Mode::DemoFirstRun),
         [a] if a == "--observe-only" => return Ok(Mode::ObserveOnly),
@@ -41,6 +48,10 @@ pub fn parse(args: &[String]) -> Result<Mode, &'static str> {
         });
     }
     Err("启动参数无效；未运行任何检测或客户端")
+}
+
+pub fn launch_allowed(mode: &Mode) -> bool {
+    cfg!(any(target_os = "macos", windows)) && matches!(mode, Mode::Live)
 }
 
 #[cfg(test)]
@@ -78,6 +89,30 @@ mod tests {
             parse(&args(&["--observe-only"])),
             Ok(Mode::ObserveOnly)
         ));
+    }
+    #[test]
+    fn only_live_supported_platforms_can_enable_gui_launch() {
+        assert_eq!(
+            launch_allowed(&Mode::Live),
+            cfg!(any(target_os = "macos", windows))
+        );
+        for mode in [
+            Mode::Demo,
+            Mode::DemoFirstRun,
+            Mode::ObserveOnly,
+            Mode::MonitorCheck,
+            Mode::Diagnostics {
+                json: false,
+                launch_check: true,
+            },
+        ] {
+            assert!(!launch_allowed(&mode));
+        }
+        assert!(parse(&args(&["--windows-cli-session", "--demo"])).is_err());
+        assert!(parse(&args(&["--windows-cli-session", "--observe-only"])).is_err());
+        assert!(parse(&args(&["--windows-cli-session", "--check"])).is_err());
+        #[cfg(windows)]
+        assert!(!launch_allowed(&Mode::WindowsCliSession));
     }
     #[test]
     fn legacy_diagnostics_are_all_check_only() {

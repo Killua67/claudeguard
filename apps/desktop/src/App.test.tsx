@@ -551,6 +551,43 @@ it('allows proxy preflight with an explicit nonblocking IPv6 coverage warning', 
   expect(backend.invoke.mock.calls.some(([name]) => name === 'launch')).toBe(false);
 });
 
+it('shows Windows native-client scope and launches only the selected available client', async () => {
+  Object.assign(backend.state!, {
+    demo: false,
+    platform: 'windows-preflight',
+    launchAllowed: true,
+    canLaunch: true,
+    clients: { cli: false, desktop: true },
+  });
+  const original = backend.invoke.getMockImplementation()!;
+  backend.invoke.mockImplementation(async (name: string, args?: Record<string, unknown>) =>
+    name === 'launch' ? next() : original(name, args),
+  );
+  const user = userEvent.setup();
+  render(<App />);
+  await screen.findByText(/Windows 启动仅支持官方原生 CLI 和 Desktop/);
+  expect(screen.getByRole('button', { name: '启动 CLI' }).hasAttribute('disabled')).toBe(true);
+  const desktop = screen.getByRole('button', { name: '启动 Desktop' });
+  expect(desktop.hasAttribute('disabled')).toBe(false);
+  expect(backend.invoke.mock.calls.some(([name]) => name === 'launch')).toBe(false);
+  await user.click(desktop);
+  await waitFor(() => expect(backend.invoke).toHaveBeenCalledWith('launch', { target: 'desktop' }));
+});
+
+it('Windows observation mode cannot launch even with an inconsistent green snapshot', async () => {
+  Object.assign(backend.state!, {
+    demo: false,
+    platform: 'windows-preflight',
+    launchAllowed: false,
+    canLaunch: true,
+  });
+  render(<App />);
+  await screen.findByText('本次仅检测 · 后端禁止启动客户端');
+  for (const name of ['启动 CLI', '启动 Desktop'])
+    expect(screen.getByRole('button', { name }).hasAttribute('disabled')).toBe(true);
+  expect(backend.invoke.mock.calls.some(([name]) => name === 'launch')).toBe(false);
+});
+
 it('focuses the actual blocking check ahead of an IPv6 advisory and refuses launch', async () => {
   backend.state!.demo = false;
   backend.state!.launchAllowed = true;

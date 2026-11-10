@@ -1,4 +1,4 @@
-//! Windows current-user proxy preflight. Does not launch clients or inspect WSL.
+//! Windows current-user proxy preflight and explicit native client launch; no WSL.
 #[cfg(windows)]
 #[path = "windows_native.rs"]
 mod native;
@@ -6,7 +6,7 @@ mod native;
 #[path = "windows_probe.rs"]
 mod probe;
 #[cfg(windows)]
-pub use native::WindowsPlatform;
+pub use native::{cli_session, guard_parent, submission_tick, GuardParent, WindowsPlatform};
 
 #[cfg(not(windows))]
 mod unsupported {

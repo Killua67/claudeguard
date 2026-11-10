@@ -1254,7 +1254,7 @@ dependencies = [
 
 [[package]]
 name = "guard-core"
-version = "0.6.0-alpha.6"
+version = "0.6.0"
 dependencies = [
  "serde",
  "serde_json",
@@ -1264,7 +1264,7 @@ dependencies = [
 
 [[package]]
 name = "guard-desktop"
-version = "0.6.0-alpha.6"
+version = "0.6.0"
 dependencies = [
  "block2",
  "guard-core",
@@ -1282,7 +1282,7 @@ dependencies = [
 
 [[package]]
 name = "guard-platform"
-version = "0.6.0-alpha.6"
+version = "0.6.0"
 dependencies = [
  "block2",
  "dispatch2",
@@ -1301,7 +1301,7 @@ dependencies = [
 
 [[package]]
 name = "guard-service"
-version = "0.6.0-alpha.6"
+version = "0.6.0"
 dependencies = [
  "guard-core",
  "guard-platform",

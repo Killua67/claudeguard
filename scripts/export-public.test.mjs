@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   mkdtempSync,
+  mkdirSync,
   writeFileSync,
   readFileSync,
   rmSync,
@@ -73,11 +74,19 @@ test("rejects paths outside the manifest boundary, secrets and symbolic links be
         );
       if (kind === "symlink") {
         rmSync(join(f.root, "safe.rs"));
-        symlinkSync("README.md", join(f.root, "safe.rs"));
+        if (process.platform === "win32") {
+          const target = join(f.root, "link-target");
+          mkdirSync(target);
+          symlinkSync(target, join(f.root, "safe.rs"), "junction");
+        } else {
+          symlinkSync("README.md", join(f.root, "safe.rs"));
+        }
       }
       writeFileSync(join(f.root, "public-files.json"), JSON.stringify(f.list));
       if (kind === "drive-relative" || kind === "ads") {
         assert.throws(() => collectPublic(f.root), /公开清单包含不允许的路径/);
+      } else if (kind === "symlink") {
+        assert.throws(() => collectPublic(f.root), /禁止软链接/);
       } else {
         assert.throws(() => collectPublic(f.root));
       }

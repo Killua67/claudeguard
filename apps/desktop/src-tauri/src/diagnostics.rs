@@ -20,7 +20,7 @@ fn profile() -> Result<Profile, String> {
     saved.require_confirmed()?;
     Ok(saved.profile)
 }
-fn confirmed_frozen(
+pub(crate) fn confirmed_frozen(
     frozen: &guard_core::config::LaunchProfile,
     saved: Result<settings::Settings, String>,
 ) -> Result<Profile, String> {
@@ -29,7 +29,7 @@ fn confirmed_frozen(
     Ok(frozen.profile.clone())
 }
 pub fn run(mode: &Mode) -> Option<i32> {
-    if !cfg!(target_os = "macos")
+    if !cfg!(any(target_os = "macos", windows))
         && matches!(
             mode,
             Mode::CheckOnly(_)

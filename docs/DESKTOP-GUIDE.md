@@ -2,12 +2,21 @@
 
 ## Windows x64 安装和首次检测
 
-1. 登录 GitHub，在 **Actions → Desktop contracts and build** 打开最近一次成功的 `main` 构建。从 **Artifacts** 下载 `ClaudeGuard-Windows-x64-preview`，解压后运行 `*-setup.exe`。这是未签名的测试安装包，产物过期后可从一次更新的成功构建下载。 [构建列表](https://github.com/Killua67/claudeguard/actions/workflows/desktop-checks.yml) · [GitHub 下载说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/download-workflow-artifacts)
+1. 在本仓库 **Releases** 打开 `v0.6.0`，下载 Windows x64 的 `*-setup.exe`，按同页 `SHA256SUMS.txt` 核对 SHA-256 后再自行安装。安装包未代码签名，Windows 可能显示安全提示；不要对来源或校验值不符的文件放行。开发构建仍可在 **Actions → Desktop contracts and build → Artifacts** 下载 `ClaudeGuard-Windows-x64-preview`，它不等同于正式发布附件。 [构建列表](https://github.com/Killua67/claudeguard/actions/workflows/desktop-checks.yml) · [GitHub 下载说明](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/download-workflow-artifacts)
 2. 打开 Clash Verge 或其他代理工具，启用**系统代理**，确认当前用户的手动代理指向 `127.0.0.1` 上的 HTTP 或混合端口。HTTP 与 HTTPS 应使用同一个端口。这里用 `7897` 举例，请以代理软件实际显示为准。可在 Windows **设置 → 网络和 Internet → 代理** 核对手动代理、自动检测和设置脚本。此版要求关闭自动检测和 PAC。 [微软的代理设置说明](https://support.microsoft.com/en-us/windows/experience/connectivity-networking/use-a-proxy-server-in-windows)
 3. 打开 ClaudeGuard，核对识别到的地址和完整程序路径，再点 **确认代理并开始检测**。地址示例为 `http://127.0.0.1:7897`。路径应对应监听端口的代理核心，可能和代理软件主界面的路径不同。地区和时区偏好可留空。
 4. 查看总览和异常详情。改过代理端口或重装代理软件后，在 ClaudeGuard 里点 **重新识别**，核对候选后点 **保存并重新检查**。重新识别只更新草稿。
 
-Windows 版只做代理预检，客户端启动按钮不可用。首次识别只读取本机信息，确认后才会通过指定代理请求固定的 Cloudflare HTTPS 地址。
+Windows Desktop 已在一台实机通过启动器启动并确认可联网使用，原生 CLI 尚未完成实机验收；旧构建可能只有代理预检。首次识别只读取本机信息，确认后才会通过指定代理请求固定的 Cloudflare HTTPS 地址。
+
+### Windows 手动启动
+
+- 正常模式完整预检通过后才允许点击启动；`--observe-only` 和演示模式始终禁止执行真实客户端。点击后会再次完整复检，结果过期、环境改变或任一阻断项失败都拒绝启动。IPv6 覆盖未知仍只作提醒。
+- CLI 只识别 `%USERPROFILE%\.local\bin\claude.exe` 中的官方原生程序，不运行 npm 的 `.cmd` 包装脚本或 WSL。选择工作目录后，受控子进程以冻结配置再次检查，得到主进程授权才打开新的原生控制台并传入代理配置。未安装时不会自动安装。
+- Desktop 识别 `%LOCALAPPDATA%\AnthropicClaude\claude.exe` 或 MSIX 包 `Claude_pzs8sxrjxfjjc` 的执行别名。已有 Desktop 必须由用户自行关闭，不会自动终止。MSIX 使用安装别名保留包身份，启动参数和环境仍由本工具明确传入。
+- 两个客户端均须通过离线 Authenticode 校验，签名发布者须为 `Anthropic, PBC`。签名错误或无法确认会阻断启动；不会联网查询证书撤销，不等于当前撤销状态已验证。
+- 启动仅代表向系统提交手动请求，不代表客户端全部流量已验证。开发测试不运行真实 Claude；Desktop 的联网使用由用户独立手动确认，CLI 控制台交互仍待实机验收。
+- 已出现过代理身份最终复核失败、重新检查后通过的情况，根因尚未定位。该错误也包含身份读取失败或路径不匹配，不代表一定发生了进程重启。保持代理状态稳定后可重新完整检查，失败时仍禁止启动，不跳过身份校验。
 
 ### Windows 找不到监听进程
 
